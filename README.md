@@ -3,9 +3,13 @@
 ## Запуск
 
 ```bash
-npm install
+npm run install:all   # зависимости сервера и фронтенда
+cp .env.example .env  # затем задайте ADMIN_PASSWORD (и OPENAI_API_KEY для ELLA)
+npm run build         # собрать фронтенд в client/dist
 npm start
 ```
+
+Нужен Node.js 22.12 или новее. Visual Studio не требуется: `better-sqlite3` берёт готовый бинарник из пакета (см. `.npmrc`).
 
 Откройте:
 - Сайт: http://localhost:3000
