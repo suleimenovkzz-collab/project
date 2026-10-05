@@ -1,0 +1,496 @@
+/* ELLA chat widget */
+
+.ella-root {
+  position: fixed;
+  right: 1.1rem;
+  bottom: 1.1rem;
+  z-index: 90;
+  font-family: var(--font-body, "Outfit", "Segoe UI", sans-serif);
+}
+
+.ella-crash {
+  margin: 0;
+  max-width: 16rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--line, rgba(243, 239, 230, 0.14));
+  background: var(--bg-elev, #141416);
+  color: var(--muted, #9a958c);
+  font-size: 0.85rem;
+}
+
+.ella-toggle {
+  width: 3.6rem;
+  height: 3.6rem;
+  border: 1px solid rgba(196, 165, 116, 0.45);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(224, 201, 160, 0.35), transparent 55%),
+    linear-gradient(145deg, #1a1714, #0e0d0c);
+  color: var(--gold-soft, #e0c9a0);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.25s var(--ease, ease), border-color 0.25s ease;
+}
+
+.ella-toggle:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold, #c4a574);
+}
+
+.ella-toggle svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: currentColor;
+}
+
+.ella-toggle[aria-expanded="true"] {
+  display: none;
+}
+
+.ella-panel {
+  --ella-w: min(360px, calc(100vw - 1.6rem));
+  --ella-h: min(520px, calc(100vh - 5.5rem));
+  position: relative;
+  width: var(--ella-w);
+  height: var(--ella-h);
+  min-width: 280px;
+  min-height: 360px;
+  max-width: calc(100vw - 1.2rem);
+  max-height: calc(100vh - 1.4rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line, rgba(243, 239, 230, 0.14));
+  background:
+    linear-gradient(180deg, rgba(196, 165, 116, 0.08), transparent 28%),
+    #121214;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+  transform-origin: bottom right;
+  animation: ella-rise 0.28s var(--ease, ease);
+  user-select: none;
+}
+
+.ella-panel.ella-panel--ready {
+  user-select: auto;
+}
+
+.ella-panel[hidden] {
+  display: none !important;
+}
+
+.ella-resize {
+  position: absolute;
+  z-index: 5;
+  touch-action: none;
+}
+
+.ella-resize--w {
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 8px;
+  cursor: ew-resize;
+}
+
+.ella-resize--w::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 48px;
+  border-radius: 999px;
+  background: rgba(196, 165, 116, 0.55);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+.ella-resize--h {
+  left: 12px;
+  right: 12px;
+  top: 0;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.ella-resize--h::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(196, 165, 116, 0.55);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+.ella-resize--corner {
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+}
+
+.ella-resize--corner::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid rgba(196, 165, 116, 0.75);
+  border-top: 2px solid rgba(196, 165, 116, 0.75);
+}
+
+.ella-resize:hover::after,
+.ella-panel.is-resizing .ella-resize::after {
+  background: rgba(224, 201, 160, 0.9);
+}
+
+.ella-resize--corner:hover::after,
+.ella-panel.is-resizing .ella-resize--corner::after {
+  background: transparent;
+  border-color: rgba(224, 201, 160, 0.95);
+}
+
+.ella-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 0.95rem;
+  border-bottom: 1px solid var(--line, rgba(243, 239, 230, 0.14));
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.ella-avatar {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, rgba(196, 165, 116, 0.45), rgba(196, 165, 116, 0.12));
+  border: 1px solid rgba(196, 165, 116, 0.4);
+  color: var(--gold-soft, #e0c9a0);
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.ella-head-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.ella-name {
+  margin: 0;
+  font-family: var(--font-display, Georgia, serif);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--ink, #f3efe6);
+}
+
+.ella-status {
+  margin: 0.15rem 0 0;
+  color: var(--gold, #c4a574);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ella-close {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line, rgba(243, 239, 230, 0.14));
+  background: transparent;
+  color: var(--muted, #9a958c);
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.ella-close:hover {
+  color: var(--ink, #f3efe6);
+  border-color: rgba(196, 165, 116, 0.4);
+}
+
+.ella-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-height: 0;
+}
+
+.ella-bubble {
+  max-width: 88%;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--ink, #f3efe6);
+}
+
+.ella-bubble--bot {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line, rgba(243, 239, 230, 0.14));
+}
+
+.ella-bubble--error {
+  border-color: rgba(214, 120, 100, 0.45);
+  background: rgba(214, 120, 100, 0.08);
+}
+
+.ella-retry {
+  display: block;
+  margin-top: 0.55rem;
+}
+
+.ella-retry:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.ella-bubble--user {
+  align-self: flex-end;
+  background: rgba(196, 165, 116, 0.18);
+  border: 1px solid rgba(196, 165, 116, 0.35);
+  color: var(--gold-soft, #e0c9a0);
+}
+
+.ella-bubble-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+}
+
+.ella-bubble-files img {
+  max-width: 140px;
+  max-height: 110px;
+  object-fit: cover;
+  border: 1px solid rgba(196, 165, 116, 0.35);
+  display: block;
+}
+
+.ella-file-chip {
+  font-size: 0.72rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid rgba(196, 165, 116, 0.35);
+  color: var(--muted, #9a958c);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ella-typing {
+  align-self: flex-start;
+  color: var(--muted, #9a958c);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.ella-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0 0.95rem 0.55rem;
+}
+
+.ella-chip {
+  border: 1px solid var(--line, rgba(243, 239, 230, 0.14));
+  background: transparent;
+  color: var(--muted, #9a958c);
+  padding: 0.35rem 0.65rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.ella-chip:hover {
+  color: var(--gold-soft, #e0c9a0);
+  border-color: rgba(196, 165, 116, 0.45);
+}
+
+.ella-handoff {
+  display: block;
+  margin: 0 0.75rem 0.65rem;
+  padding: 0.7rem 0.85rem;
+  text-align: center;
+  text-decoration: none;
+  color: #141210;
+  background: linear-gradient(135deg, #d4b896, #c4a574);
+  border: 1px solid rgba(224, 201, 160, 0.55);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.ella-handoff:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.ella-attach-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem 0;
+  border-top: 1px solid var(--line, rgba(243, 239, 230, 0.14));
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.ella-attach-preview[hidden] {
+  display: none !important;
+}
+
+.ella-attach-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 160px;
+  padding: 0.25rem 1.5rem 0.25rem 0.35rem;
+  border: 1px solid rgba(196, 165, 116, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.7rem;
+  color: var(--muted, #9a958c);
+}
+
+.ella-attach-item img {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+}
+
+.ella-attach-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ella-attach-remove {
+  position: absolute;
+  right: 0.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted, #9a958c);
+  cursor: pointer;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.ella-form {
+  display: flex;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  border-top: 1px solid var(--line, rgba(243, 239, 230, 0.14));
+  background: rgba(0, 0, 0, 0.22);
+  align-items: center;
+}
+
+.ella-attach {
+  flex: 0 0 auto;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid var(--line, rgba(243, 239, 230, 0.14));
+  background: #0e0e10;
+  color: var(--gold-soft, #e0c9a0);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ella-attach:hover {
+  border-color: rgba(196, 165, 116, 0.5);
+  color: var(--gold, #c4a574);
+}
+
+.ella-form input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line, rgba(243, 239, 230, 0.14));
+  background: #0e0e10;
+  color: var(--ink, #f3efe6);
+  padding: 0.7rem 0.8rem;
+  font: inherit;
+}
+
+.ella-form input[type="text"]:focus {
+  outline: none;
+  border-color: rgba(196, 165, 116, 0.5);
+}
+
+.ella-send {
+  border: 1px solid var(--gold, #c4a574);
+  background: var(--gold, #c4a574);
+  color: #141210;
+  padding: 0 0.95rem;
+  height: 2.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.ella-send:hover {
+  background: var(--gold-soft, #e0c9a0);
+  border-color: var(--gold-soft, #e0c9a0);
+}
+
+.ella-link {
+  color: var(--gold-soft, #e0c9a0);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@keyframes ella-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .ella-root {
+    right: 0.75rem;
+    bottom: 4.6rem;
+  }
+
+  .ella-panel {
+    --ella-w: calc(100vw - 1.5rem);
+    --ella-h: min(62vh, 480px);
+    min-width: 240px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ella-root {
+    right: 0.75rem;
+    bottom: 4.6rem;
+  }
+
+  .ella-panel {
+    --ella-w: calc(100vw - 1.5rem);
+    --ella-h: min(62vh, 480px);
+    min-width: 240px;
+  }
+}

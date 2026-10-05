@@ -1,0 +1,23 @@
+{
+  "name": "alisher-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Клиника доктора Сулейменова — сайт с админкой услуг",
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"node server.js\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix client",
+    "start": "node server.js",
+    "verify:shop": "node scripts/verify-shop.js",
+    "install:all": "npm install && npm install --prefix client"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "cookie-parser": "^1.4.7",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.2",
+    "pdfmake": "^0.3.11"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

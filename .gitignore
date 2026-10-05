@@ -1,0 +1,14 @@
+node_modules/
+.env
+*.log
+data/orders.json
+data/*.db
+data/*.db-*
+data/*.migrated.*
+data/fx-rates.json
+public/uploads/*
+!public/uploads/.gitkeep
+!public/uploads/crown.jpg
+!public/uploads/veneers.jpg
+!public/uploads/implant.jpg
+!public/uploads/checkup.jpg

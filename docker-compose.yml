@@ -1,0 +1,27 @@
+services:
+  app:
+    build: .
+    image: alisher-site:latest
+    container_name: alisher-site
+    restart: unless-stopped
+    # tini as PID 1: forwards SIGTERM so the server closes SQLite cleanly on `docker compose down`.
+    init: true
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+    ports:
+      - "${HOST_PORT:-3000}:3000"
+    volumes:
+      - app-data:/app/data
+      - app-uploads:/app/public/uploads
+    stop_grace_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  app-data:
+  app-uploads:
