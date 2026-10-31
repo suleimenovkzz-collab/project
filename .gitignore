@@ -1,14 +1,38 @@
 node_modules/
+client/dist/
+**/.vite/
+
+# Secrets: only the template is committed
 .env
+.env.*
+!.env.example
+
+# Logs
 *.log
+npm-debug.log*
+
+# Runtime data: SQLite with orders/customers, sessions, FX cache, migration archives
 data/orders.json
 data/*.db
 data/*.db-*
+data/*.sqlite*
+data/*.bak
 data/*.migrated.*
 data/fx-rates.json
+data/backup*/
+
+# Uploaded photos; only the stock images ship with the repo
 public/uploads/*
 !public/uploads/.gitkeep
 !public/uploads/crown.jpg
 !public/uploads/veneers.jpg
 !public/uploads/implant.jpg
 !public/uploads/checkup.jpg
+
+# OS / editors
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
