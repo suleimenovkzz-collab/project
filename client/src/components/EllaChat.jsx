@@ -369,7 +369,7 @@ export default function EllaChat() {
     if (errors.length) {
       setMessages((prev) => [
         ...prev,
-        ...errors.map((text, i) => ({
+        ...errors.map((text) => ({
           id: nextMsgId("err"),
           who: "bot",
           text,

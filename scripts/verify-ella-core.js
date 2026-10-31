@@ -183,8 +183,8 @@ async function main() {
     console.log("SAMPLE REPLY:", result.reply.slice(0, 180).replace(/\n/g, " "));
   }
 
-  console.log("--- http contract (PORT from env or 3022) ---");
-  const port = process.env.VERIFY_PORT || "3022";
+  const port = process.env.VERIFY_PORT || process.env.PORT || "3000";
+  console.log(`--- http contract (running server on :${port}) ---`);
   try {
     const statusRes = await fetch(`http://127.0.0.1:${port}/api/ella/status`);
     const statusJson = await statusRes.json();
@@ -228,7 +228,7 @@ async function main() {
   } catch (e) {
     failed += 1;
     console.error("FAIL: http checks —", e.message);
-    console.error("(start server with PORT=3022 node server.js)");
+    console.error(`(start the server first: npm start — it listens on :${port})`);
   }
 
   console.log("\n==== RESULT ====");
